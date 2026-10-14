@@ -1,33 +1,50 @@
 # Implicit Sliding Puzzles
 
-Constructive generation of solvable sliding puzzles using compact, reversible move programs and exact positional queries.
+Constructive generation of solvable sliding-puzzle instances with compact reversible move grammars and exact positional queries.
 
-## Scope
+## Result A: constructive million-side boards
 
-The first result constructs a family of **reachable** sliding-puzzle configurations by applying a legal sequence of blank moves to the canonical board. Its inverse is a complete, deterministic solution for the **constructed instances**. Compact grammars make the board and solution addressable without materializing all cells or all moves.
+The frozen reference profile `M9g8-wandering-384` constructs an implicit board of **1,000,000 × 1,000,000** cells using legal blank moves. The program's structural inverse solves the **generated** instance. No globally optimal length or arbitrary-board solver is claimed.
 
-This is not a claim to optimally solve arbitrary sliding-puzzle permutations. Work on global F-max optimization is maintained separately.
+Recorded verification of `M9g8`–`M9g10` (source checkout `901933f0f7565b41f0a4f60bf56df5533dc9d65c`):
 
-## First verification target
+| Measure | Recorded result |
+| --- | ---: |
+| Cells | 1,000,000,000,000 |
+| Rounds | 384 |
+| Grammar nodes | 5,379 |
+| Physical moves (seed 10363137) | 96,288,361,077,053,954,149,714,072 |
+| Serialized JSON artifact (same seed) | 678,347 bytes |
+| Materialized cells / moves | 0 / 0 |
 
-- Board: `1,000,000 × 1,000,000` (one trillion cells)
-- Frozen research profile: `M9g8-wandering-384`
-- Three recorded JSON solution artifacts: 678,347–678,399 bytes
-- Exact addressable move program: physical lengths around `10^26` steps
-- Validation: literal small-board replay, sparse large-board queries, serialization/integrity and bounded move-window tests
+The reported figure for physical moves is the length **represented by** the grammar; this many moves have not been literally replayed on the million-side board.
 
-These are **recorded research results**, not fresh CI measurements of this repository. Executable reproduction, independent verification and provenance will be added as separately reviewable units before any release is declared.
+## Reproduce
 
-## Repository organization
+Python 3.11+ and the standard library suffice.
 
-The initial implementation, mathematical definitions, source provenance, experimental fixtures and independent checks are developed in review branches. Revisions become public releases only after reproducibility and license reviews.
+```sh
+PYTHONPATH=src python3 -m unittest discover -s tests -v
+PYTHONPATH=src python3 -m implicit_sliding_puzzles.million_solution_artifact build \
+  --seed 10363137 --output million.solution.json
+PYTHONPATH=src python3 -m implicit_sliding_puzzles.million_solution_artifact verify million.solution.json
+PYTHONPATH=src python3 -m implicit_sliding_puzzles.million_solution_query move-at million.solution.json 0
+```
 
-**Publication status:** working public research repository. No final release has been certified.
+These are newly extracted/refactored components; until CI and an independent local run have passed, the branch is **under review**, even though the older experiments had successful runs.
+
+## Mathematical contract
+
+See [constructive reachability and inverse](docs/proofs/constructive-reachability.md) and [source provenance](docs/provenance.md).
+
+The JSON contains a SHA-256 integrity digest, not a signature or proof of authorship.
 
 ## Publications
 
-Immutable PDFs and their checksums will be distributed separately, linked to exact source commits and release identifiers.
+Articles and immutable PDFs are managed outside this source repository. An article must link to an immutable release/tag and evidence manifest.
 
-## Attribution and licensing
+## License
 
-Original research is attributed to its authors. Source and documentation licensing will be explicitly established before a public release; until then, publication of the repository does not itself grant an open-source reuse license.
+Software, tests, executable examples and tooling are available under the **Apache License 2.0** ([LICENSE](LICENSE)). Original research prose, non-executable mathematical proofs and figures are available under **Creative Commons Attribution 4.0 International** ([LICENSE-DOCS](LICENSE-DOCS)).
+
+See [LICENSING.md](LICENSING.md) for exact file scope, source provenance and third-party exceptions. Public code on this branch remains a research candidate; licensing is not an assertion of experimental or mathematical correctness.
