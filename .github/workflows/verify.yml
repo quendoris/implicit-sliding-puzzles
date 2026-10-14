@@ -1,0 +1,20 @@
+name: verify-constructive-core
+on:
+  push:
+  pull_request:
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile Python modules
+        run: python -m compileall -q src tests
+      - name: Verify physical replay and artifact roundtrips
+        run: PYTHONPATH=src python -m unittest discover -s tests -v
