@@ -43,6 +43,8 @@ The JSON contains a SHA-256 integrity digest, not a signature or proof of author
 
 Articles and immutable PDFs are managed outside this source repository. An article must link to an immutable release/tag and evidence manifest.
 
-## License status
+## License
 
-This is a public review branch. Licensing is not granted merely by public visibility. Code and documentation license files will be chosen explicitly before a stable release.
+Software, tests, executable examples and tooling are available under the **Apache License 2.0** ([LICENSE](LICENSE)). Original research prose, non-executable mathematical proofs and figures are available under **Creative Commons Attribution 4.0 International** ([LICENSE-DOCS](LICENSE-DOCS)).
+
+See [LICENSING.md](LICENSING.md) for exact file scope, source provenance and third-party exceptions. Public code on this branch remains a research candidate; licensing is not an assertion of experimental or mathematical correctness.
